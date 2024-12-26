@@ -5,17 +5,24 @@ import images from "@/constants/images";
 import icons from "@/constants/icons";
 import { login } from "@/lib/appwrite";
 import { Alert } from "react-native";
+import { useGlobalContext } from "@/lib/global.provider";
+import { Redirect } from "expo-router";
 
 const signin = () => {
+  const { refetch, loading, isLoggedIn } = useGlobalContext();
+
+  if (!loading && isLoggedIn) return <Redirect href="/" />;
+
   const handleLogin = async () => {
     const result = await login();
 
     if (result) {
-      console.log("Login Success");
+      refetch();
     } else {
       Alert.alert("Login Failed", "Please try again");
     }
   };
+
   return (
     <SafeAreaView className="bg-white h-full">
       <ScrollView contentContainerClassName="h-full">
